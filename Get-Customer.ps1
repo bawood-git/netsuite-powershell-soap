@@ -23,7 +23,7 @@ param(
 . .\lib\TokenPassport.ps1 -ConfigurationFile $ConfigurationFile -WSDL https://webservices.netsuite.com/wsdl/v2021_2_0/netsuite.wsdl
 
 # Helpers
-. .\lib\ReferenceModel.ps1
+. .\lib\ReferenceModels.ps1
 
 
 ###########################

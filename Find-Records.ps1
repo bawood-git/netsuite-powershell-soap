@@ -11,7 +11,9 @@
 
 param(
     [parameter(Mandatory=$true)]
-    $ConfigurationFile
+    $ConfigurationFile,
+    [parameter(Mandatory=$true)]
+    $CustomeRecordId
 )
 
 ###########################
@@ -22,16 +24,15 @@ param(
 . .\lib\TokenPassport.ps1 -ConfigurationFile $ConfigurationFile -WSDL https://webservices.netsuite.com/wsdl/v2021_2_0/netsuite.wsdl
 
 # Helpers
-. .\lib\ReferenceModel.ps1
+. .\lib\ReferenceModels.ps1
 . .\lib\SearchModels.ps1
-
 
 ###########################
 # SEARCH RECORD
 ###########################
 
 try {
-    $RecordRef = New-RecordRef -Type ([Netsuite.RecordType]::customRecord) -InternalId 689
+    $RecordRef = New-RecordRef -Type ([Netsuite.RecordType]::customRecord) -InternalId $CustomeRecordId
     $Search = New-CustomRecordSearch_Basic -RecordRef $RecordRef
 
     $Service = Get-NetSuiteService

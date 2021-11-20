@@ -12,10 +12,8 @@
 
 param (
     $WSDL,
-    $ConfigurationFile
-    
+    $ConfigurationFile  
 )
-
 
 # Enforce TLS
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
@@ -36,7 +34,6 @@ function Get-AccountConfig {
 
     return $Account
 }
-
 
 function Get-TokenPassport {
     
