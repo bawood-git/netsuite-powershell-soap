@@ -78,10 +78,12 @@ function Get-TokenPassport {
 }
 
 function Get-NetSuiteService {
+    Write-Verbose -Verbose -Message "Creating passport"
     $Service = New-Object NetSuite.NetSuiteService  
     $Service.tokenPassport = Get-TokenPassport
 
     #Have to reconfigure service URLS post 2012 version, else you will receive HTTP 410: Gone       
+    Write-Verbose -Verbose -Message "Fetching URLs"
     [System.Uri] $OriginalURI = $Service.Url
     [NetSuite.DataCenterUrls]$URLs = $Service.getDataCenterUrls((Get-AccountConfig).AccountId.toLower()).dataCenterUrls
     [System.Uri] $DataCenterURI = $URLs.webservicesDomain + $OriginalURI.PathAndQuery

@@ -11,11 +11,13 @@
 
 param(
     [parameter(Mandatory=$true)]
-    $SalesOrderId
+    $SalesOrderId,
+    [parameter(Mandatory=$true)]
+    $ConfigurationFile
 )
 
 #Init SOAP TBA
-. .\lib\TokenPassport.ps1 -ConfigurationFile C:\proc\conf\account.json -WSDL https://webservices.netsuite.com/wsdl/v2021_2_0/netsuite.wsdl
+. .\lib\TokenPassport.ps1 -ConfigurationFile $ConfigurationFile -WSDL https://webservices.netsuite.com/wsdl/v2021_2_0/netsuite.wsdl
 
 try {
     # MUST initialize service with each request.
