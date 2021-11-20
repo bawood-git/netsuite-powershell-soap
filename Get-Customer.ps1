@@ -11,34 +11,44 @@
 
 param(
     [parameter(Mandatory=$true)]
-    $SalesOrderId,
+    $ConfigurationFile,
     [parameter(Mandatory=$true)]
-    $ConfigurationFile
+    $CustomerId
 )
+###########################
+# LIBRARIES
+###########################
 
 #Init SOAP TBA
 . .\lib\TokenPassport.ps1 -ConfigurationFile $ConfigurationFile -WSDL https://webservices.netsuite.com/wsdl/v2021_2_0/netsuite.wsdl
 
+# Helpers
+. .\lib\ReferenceModel.ps1
+
+
+###########################
+# GET RECORD
+###########################
+
 try {
-    # MUST initialize service with each request.
+    # Note: Get returns [NetSuite.ReadResponse] object. Other verbs return different objects 
+    $RefCustomer = New-RecordRef -Type ([NetSuite.RecordType]::customer) -InternalId $CustomerId
     $Service = Get-NetSuiteService
 
-    $RefSalesOrder = New-Object NetSuite.RecordRef
-    $RefSalesOrder.internalId = $SalesOrderId
-    $RefSalesOrder.type = [NetSuite.RecordType]::salesOrder
-    $RefSalesOrder.typeSpecified = $true
-
-    [NetSuite.ReadResponse]$Response = $Service.get($RefSalesOrder)
+    Write-Verbose -Verbose -Message "Executing record lookup"
+    $Response = $Service.get($RefCustomer)
 
      if ($Response.status.isSuccess) {
 
-        [ordered]@{internalId = $Response.record.internalId; Customer=$Response.record.entity.name}
+        $Response.record
 
     }else{
 
         Write-Warning -Verbose -Message "$($Response.status.statusDetail.code): $($Response.status.statusDetail.message)"
     }
+
 }catch{
+
     Write-Error -Exception $_.Exception -Message $_.Exception.Message
 
 }
