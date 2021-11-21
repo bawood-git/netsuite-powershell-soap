@@ -45,7 +45,7 @@ try {
 
     }else{
 
-        Write-Warning -Verbose -Message "$($Response.status.statusDetail.code): $($Response.status.statusDetail.message)"
+        Write-Warning -Verbose -Message "$($Result.status.statusDetail.code): $($Result.status.statusDetail.message)"
     }
     
 }catch{
