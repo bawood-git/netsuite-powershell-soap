@@ -14,7 +14,7 @@ param(
     $CustomeRecordId
 )
 
-Import-Module ./modules/netsuite-soap.psm1
+Import-Module ../modules/netsuite-soap.psm1
 
 #Fetch objects for building SOAP requests
 Import-NetSuiteWSDL -WebServiceURL "https://webservices.netsuite.com/wsdl/v2021_2_0/netsuite.wsdl"
