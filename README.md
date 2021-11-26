@@ -3,6 +3,8 @@ NetSuite tooling for SOAP API using PowerShell
 
 The purpose of this project is to give some basic examples for making requests from PowerShell to NetSuite using SOAP. The goal is to create a base project with example functions for handling tasks like fetching a record, searching, and creating transactions.
 
+Note: Sanbox accounts have a modified accountId, so if your account is 12345, sanbox iterations would be 12345_SB1, 12345_SB2, etc.
+
 # Samples:
 Get-Customer - Get customer body fields by internalId
 
