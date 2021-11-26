@@ -1,12 +1,9 @@
 ﻿<# .SYNOPSIS
-     Fetch a SalesOrder
+     Get Customer Record 
 .DESCRIPTION
-     Fetch a record where the internalId is known
+     Example of service.get(recordRef) to fetch a customer based on internalId
 .NOTES
      Author   : Benjamin Wood - bawood@live.com
-     TODO     : A lot. Definately don't want to fetch the WSDL for each call. Have a startup script like this instead
-     History  : 2021-11-18 Initial design
-     
 #>
 
 param(
@@ -15,40 +12,32 @@ param(
     [parameter(Mandatory=$true)]
     $CustomerId
 )
-###########################
-# LIBRARIES
-###########################
 
-#Init SOAP TBA
-. .\lib\TokenPassport.ps1 -ConfigurationFile $ConfigurationFile -WSDL https://webservices.netsuite.com/wsdl/v2021_2_0/netsuite.wsdl
+Import-Module ./modules/netsuite-soap.psm1
 
-# Helpers
-. .\lib\ReferenceModels.ps1
-
+#Fetch objects for building SOAP requests
+Import-NetSuiteWSDL -WebServiceURL "https://webservices.netsuite.com/wsdl/v2021_2_0/netsuite.wsdl"
 
 ###########################
 # GET RECORD
 ###########################
 
 try {
-    # Note: Get returns [NetSuite.ReadResponse] object. Other verbs return different objects 
     $RefCustomer = New-RecordRef -Type ([NetSuite.RecordType]::customer) -InternalId $CustomerId
-    $Service = Get-NetSuiteService
+    $Account = Get-NetSuiteAccount -Path $ConfigurationFile
+    $Service = Get-NetSuiteService -Account $Account
 
     Write-Verbose -Verbose -Message "Executing record lookup"
-    $Response = $Service.get($RefCustomer)
+    $ReadResponse = $Service.get($RefCustomer)
 
-     if ($Response.status.isSuccess) {
-
-        $Response.record
-
+     if ($ReadResponse.status.isSuccess) {
+        
+        $ReadResponse.record
     }else{
-
-        Write-Warning -Verbose -Message "$($Response.status.statusDetail.code): $($Response.status.statusDetail.message)"
+        
+        Write-Warning -Verbose -Message "$($ReadResponse.status.statusDetail.code): $($ReadResponse.status.statusDetail.message)"
     }
 
 }catch{
-
     Write-Error -Exception $_.Exception -Message $_.Exception.Message
-
 }
